@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base resets ──────────────────────────────────────────────────────────── */
+@layer base {
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    body {
+        background-color: #0a0e0a;
+        color: #c8ffc8;
+        font-family: var(--font-jetbrains), "JetBrains Mono", "Fira Code", monospace;
+        min-height: 100dvh;
+        overflow-x: hidden;
+    }
+
+    /* Prevent layout shift from scrollbar appearing */
+    html {
+        scrollbar-gutter: stable;
+    }
+
+    /* Focus visible — keyboard nav only, not mouse clicks */
+    :focus-visible {
+        outline: 1px solid #00ff41;
+        outline-offset: 2px;
+    }
+
+    :focus:not(:focus-visible) {
+        outline: none;
+    }
+}
+
+/* ─── Custom scrollbar ─────────────────────────────────────────────────────── */
+@layer base {
+    ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #0f150f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #1a2e1a;
+        border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #00cc33;
+    }
+
+    /* Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #1a2e1a #0f150f;
+    }
+}
+
+/* ─── Text selection ───────────────────────────────────────────────────────── */
+@layer base {
+    ::selection {
+        background-color: rgba(0, 255, 65, 0.18);
+        color: #00ff41;
+    }
+}
+
+/* ─── Animations ───────────────────────────────────────────────────────────── */
+@layer utilities {
+
+    /* Used by BootSequence lines and message bubbles */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes blink {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes glow {
+        from {
+            text-shadow:
+                0 0 6px rgba(0, 255, 65, 0.6),
+                0 0 14px rgba(0, 255, 65, 0.3);
+        }
+
+        to {
+            text-shadow:
+                0 0 14px rgba(0, 255, 65, 0.9),
+                0 0 28px rgba(0, 255, 65, 0.5),
+                0 0 48px rgba(0, 255, 65, 0.2);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.25s ease-in-out both;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.3s ease-out both;
+    }
+
+    .animate-blink {
+        animation: blink 1s step-end infinite;
+    }
+
+    .animate-glow {
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    .animate-boot {
+        animation: fadeIn 0.12s ease-in both;
+    }
+}
+
+/* ─── Prose overrides for markdown content ─────────────────────────────────── */
+/* Scoped to .prose-kern so it doesn't leak into other components             */
+@layer components {
+    .prose-kern {
+        color: #c8ffc8;
+        font-size: 0.875rem;
+        line-height: 1.65;
+    }
+
+    .prose-kern p {
+        margin-bottom: 0.5rem;
+    }
+
+    .prose-kern p:last-child {
+        margin-bottom: 0;
+    }
+
+    .prose-kern ol,
+    .prose-kern ul {
+        margin-bottom: 0.5rem;
+        padding-left: 0;
+    }
+
+    .prose-kern li+li {
+        margin-top: 0.25rem;
+    }
+
+    /* Remove default list-style — our MessageBubble components handle markers */
+    .prose-kern ul,
+    .prose-kern ol {
+        list-style: none;
+    }
+
+    /* Tables */
+    .prose-kern table {
+        font-size: 0.75rem;
+    }
+
+    /* Inline code that wasn't caught by the react-markdown code component */
+    .prose-kern :not(pre)>code {
+        font-family: var(--font-jetbrains), monospace;
+        font-size: 0.8em;
+        padding: 0.15em 0.4em;
+        border-radius: 3px;
+        background: #0f150f;
+        border: 1px solid #1a2e1a;
+        color: #ffb300;
+    }
+}
+
+/* ─── Mobile viewport fix ──────────────────────────────────────────────────── */
+/* Prevents 100vh issues on mobile browsers with address bar                  */
+@layer utilities {
+    .h-screen-safe {
+        height: 100dvh;
+    }
+}
